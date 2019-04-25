@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack"
+    "start": "webpack --mode development",
+    "build": "NODE_ENV=prod webpack --mode production",
+    "server": "webpack-dev-server"
   },
   "author": "Ivan",
   "license": "ISC",
   "dependencies": {
+    "prop-types": "^15.7.2",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "sass-loader": "^7.1.0"
