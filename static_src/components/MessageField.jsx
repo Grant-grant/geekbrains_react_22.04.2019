@@ -3,12 +3,13 @@ import Message from './Message';
 import TextField from 'material-ui/TextField';
 
 
-export default class App extends React.Component {
+export default class MessageField extends React.Component {
     state = {
         messageList: [1, 2],
         messages: {1: {'text': 'Привет', 'sender': 'me'}, 2: {'text': 'Здравствуйте', 'sender': 'bot'}},
         input: '',
         nextId: 3,
+        test: 1,
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -18,6 +19,10 @@ export default class App extends React.Component {
             setTimeout(() => this.handleSendMessage('Отстань, я робот!', 'bot'), 500)
         }
     }
+
+    incTest = () => {
+        this.setState({ test: this.state.test + 1 })
+    };
 
     handleInput = (e) => {
         this.setState({ [e.target.name]: e.target.value })
@@ -42,7 +47,7 @@ export default class App extends React.Component {
     render() {
         const { messages, messageList, input } = this.state;
         const messageElements = messageList.map((messageId, index) =>
-            <Message key={ index } text={ messages[messageId].text } />);
+            <Message key={ index } incTest={ this.incTest } text={ messages[messageId].text } />);
         return (
             <div>
                 { messageElements }
