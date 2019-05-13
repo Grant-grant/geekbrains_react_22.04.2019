@@ -1,41 +1,42 @@
 import React from 'react';
-import Message from './Message';
+import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import SendIcon from 'material-ui/svg-icons/content/send';
+import Message from './Message';
+import '../styles/messages.scss';
+import {bindActionCreators} from "redux";
+import { sendMessage } from "../actions/messageActions";
+import connect from "react-redux/es/connect/connect";
 
 
-export default class MessageField extends React.Component {
-    state = {
-        messageList: [1, 2],
-        messages: {1: {'text': 'Привет', 'sender': 'me'}, 2: {'text': 'Здравствуйте', 'sender': 'bot'}},
-        input: '',
-        nextId: 3,
-        test: 1,
+class MessageField extends React.Component {
+    static propTypes = {
+        messageList: PropTypes.arrayOf(PropTypes.number).isRequired,
+        messages: PropTypes.object.isRequired,
+        nextId: PropTypes.number.isRequired,
+        sendMessage: PropTypes.func.isRequired,
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        const { nextId, messages, messageList } = this.state;
+    state = {
+        input: '',
+    };
+
+    componentDidUpdate(prevProps) {
+        const { nextId, messages, messageList } = this.props;
         const lastSender = messages[nextId - 1].sender;
-        if (lastSender === 'me' && messageList.length > prevState.messageList.length ) {
+        if (lastSender === 'me' && messageList.length > prevProps.messageList.length ) {
             setTimeout(() => this.handleSendMessage('Отстань, я робот!', 'bot'), 500)
         }
     }
-
-    incTest = () => {
-        this.setState({ test: this.state.test + 1 })
-    };
 
     handleInput = (e) => {
         this.setState({ [e.target.name]: e.target.value })
     };
 
     handleSendMessage = (text, sender) => {
-        const { messageList, messages, nextId } = this.state;
-        this.setState({
-            messageList: [ ...messageList, nextId],
-            messages: { ...messages, [nextId]: { text, sender } },
-            input: '',
-            nextId: nextId + 1,
-        })
+        this.setState({ input: '' });
+        this.props.sendMessage(text, sender);
     };
 
     handleKeyUp = (e) => {
@@ -45,13 +46,17 @@ export default class MessageField extends React.Component {
     };
 
     render() {
-        const { messages, messageList, input } = this.state;
+        const { messages, messageList } = this.props;
+        const { input } = this.state;
         const messageElements = messageList.map((messageId, index) =>
-            <Message key={ index } incTest={ this.incTest } text={ messages[messageId].text } />);
+            <Message key={ index } text={ messages[messageId].text } sender={ messages[messageId].sender } />);
         return (
             <div>
-                { messageElements }
+                <div className="message-field">
+                    { messageElements }
+                </div>
                 <TextField
+                    style={{ width: '90%' }}
                     onKeyUp={ this.handleKeyUp }
                     label="Name"
                     underlineStyle={{ color: 'red' }}
@@ -60,8 +65,20 @@ export default class MessageField extends React.Component {
                     onChange={ this.handleInput }
                     placeholder="Введите сообщение"
                 />
-                <button onClick={ () => this.handleSendMessage(input, 'me') }>Отправить сообщение</button>
+                <FloatingActionButton onClick={ () => this.handleSendMessage(input, 'me') }>
+                        <SendIcon />
+                </FloatingActionButton>
             </div>
         )
     }
 }
+
+const mapStateToProps = ({ messageReducer }) => ({
+    messageList: messageReducer.messageList,
+    messages: messageReducer.messages,
+    nextId: messageReducer.nextId,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({ sendMessage }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageField);
