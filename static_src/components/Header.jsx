@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {bindActionCreators} from "redux";
+import { bindActionCreators } from "redux";
+import { Link } from 'react-router-dom';
 import connect from "react-redux/es/connect/connect";
 
 
@@ -12,7 +13,11 @@ class Header extends React.Component {
 
     render() {
         return (
-            <div className="header">Общее количество сообщений: { this.props.messageCount }, Последнее сообщение: { this.props.lastMessage }</div>
+            <div className="header">
+                Общее количество сообщений: { this.props.messageCount },
+                Последнее сообщение: { this.props.lastMessage }
+                <Link to={ '/profile/' }>Profile</Link>
+            </div>
         )
     }
 }

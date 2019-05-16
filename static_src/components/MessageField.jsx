@@ -16,19 +16,17 @@ class MessageField extends React.Component {
         messages: PropTypes.object.isRequired,
         nextId: PropTypes.number.isRequired,
         sendMessage: PropTypes.func.isRequired,
+        chatId: PropTypes.number,
+        chats: PropTypes.object.isRequired,
+    };
+
+    static defaultProps = {
+        chatId: 1,
     };
 
     state = {
         input: '',
     };
-
-    componentDidUpdate(prevProps) {
-        const { nextId, messages, messageList } = this.props;
-        const lastSender = messages[nextId - 1].sender;
-        if (lastSender === 'me' && messageList.length > prevProps.messageList.length ) {
-            setTimeout(() => this.handleSendMessage('Отстань, я робот!', 'bot'), 500)
-        }
-    }
 
     handleInput = (e) => {
         this.setState({ [e.target.name]: e.target.value })
@@ -36,7 +34,7 @@ class MessageField extends React.Component {
 
     handleSendMessage = (text, sender) => {
         this.setState({ input: '' });
-        this.props.sendMessage(text, sender);
+        this.props.sendMessage(this.props.chatId, text, sender);
     };
 
     handleKeyUp = (e) => {
@@ -46,9 +44,9 @@ class MessageField extends React.Component {
     };
 
     render() {
-        const { messages, messageList } = this.props;
+        const { messages, messageList, chats, chatId } = this.props;
         const { input } = this.state;
-        const messageElements = messageList.map((messageId, index) =>
+        const messageElements = chats[chatId].messageList.map((messageId, index) =>
             <Message key={ index } text={ messages[messageId].text } sender={ messages[messageId].sender } />);
         return (
             <div>
@@ -73,10 +71,12 @@ class MessageField extends React.Component {
     }
 }
 
-const mapStateToProps = ({ messageReducer }) => ({
+const mapStateToProps = ({ messageReducer, chatReducer }) => ({
     messageList: messageReducer.messageList,
     messages: messageReducer.messages,
     nextId: messageReducer.nextId,
+
+    chats: chatReducer.chats,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ sendMessage }, dispatch);
