@@ -24,15 +24,13 @@ class Message extends React.Component {
                 className={ this.props.sender === 'bot' ? 'bot-message' : 'my-message' }
                 style={{ margin: '5px' }}
             >
-                { this.props.text }, {this.props.count}
+                { this.props.text }
             </Chip>
         )
     }
 }
 
-const mapStateToProps = ({ testReducer }) => ({
-    count: testReducer.counter,
-});
+const mapStateToProps = ({}) => ({});
 
 const mapDispatchToProps = dispatch => bindActionCreators({ test }, dispatch);
 

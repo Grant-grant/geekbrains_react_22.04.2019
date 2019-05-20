@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import SendIcon from 'material-ui/svg-icons/content/send';
+import CircularProgress from 'material-ui/CircularProgress';
 import Message from './Message';
 import '../styles/messages.scss';
 import {bindActionCreators} from "redux";
@@ -18,6 +19,7 @@ class MessageField extends React.Component {
         sendMessage: PropTypes.func.isRequired,
         chatId: PropTypes.number,
         chats: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool.isRequired,
     };
 
     static defaultProps = {
@@ -44,7 +46,11 @@ class MessageField extends React.Component {
     };
 
     render() {
-        const { messages, messageList, chats, chatId } = this.props;
+        if (this.props.isLoading) {
+            return <CircularProgress />
+        }
+
+        const { messages, chats, chatId } = this.props;
         const { input } = this.state;
         const messageElements = chats[chatId].messageList.map((messageId, index) =>
             <Message key={ index } text={ messages[messageId].text } sender={ messages[messageId].sender } />);
@@ -77,6 +83,7 @@ const mapStateToProps = ({ messageReducer, chatReducer }) => ({
     nextId: messageReducer.nextId,
 
     chats: chatReducer.chats,
+    isLoading: chatReducer.isLoading,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ sendMessage }, dispatch);
