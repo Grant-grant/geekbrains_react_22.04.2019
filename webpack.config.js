@@ -9,8 +9,7 @@ module.exports = {
     context: `${__dirname}/static_src`,
     output: {
         path: `${__dirname}/static/build`,
-        filename: "app.js",
-        // filename: NODE_ENV === 'development' ? '[name].js' : '[name]-[hash].js',
+        filename: NODE_ENV === 'development' ? '[name].js' : '[name]-[hash].js',
         publicPath: '/static/build/',
     },
 
