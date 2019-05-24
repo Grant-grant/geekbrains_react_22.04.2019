@@ -1,5 +1,5 @@
 import React from 'react';
-import Close from 'material-ui/svg-icons/navigation/close';
+import Cancel from 'material-ui/svg-icons/navigation/cancel';
 import '../styles/popup.scss';
 
 
@@ -35,7 +35,7 @@ class InstallPopup extends React.Component {
         return (
             <div style={ { display: this.state.isShown ? 'block' : 'none' } } className="speech-bubble-container">
                 <div className="speech-bubble">
-                    <Close className="close-install-message-icon" onClick={ this.handleHide } />
+                    <Cancel className="close-install-message-icon" onClick={ this.handleHide } />
                     <div style={ { paddingRight: '15px' } }>Установи приложение на свой iPhone</div>
                 </div>
             </div>
