@@ -7,6 +7,17 @@ class InstallPopup extends React.Component {
     state = {
         isShown: false,
     };
+    
+    const isIos = () => {
+           const userAgent = window.navigator.userAgent.toLowerCase();
+           return /iphone|ipad|ipod/.test( userAgent );
+       };
+  
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+     
+    if (isIos() && !isInStandaloneMode()) {
+           this.setState({ isShown: true }); // На примере React
+    }
 
     componentDidMount() {
         // Detects if device is on iOS
