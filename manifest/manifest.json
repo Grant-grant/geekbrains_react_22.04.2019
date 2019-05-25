@@ -1,6 +1,6 @@
 {
-  "short_name": "Geekchat",
-  "name": "Geekchat",
+  "short_name": "Specchat",
+  "name": "Specchat",
   "icons": [
         {
       "src":"/manifest/logo-pwa-16.png",
